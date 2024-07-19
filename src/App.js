@@ -10,6 +10,9 @@ import SignIn from './member/pages/SignIn';
 import PublicRoute from './public/contexts/PublicRoute';
 import NotFound from './public/pages/NotFound';
 import LoginRoute from './public/contexts/LoginRoute';
+import ArticleList from './board/pages/ArticleList';
+import ArticleCreate from './board/pages/ArticleCreate';
+import SignOut from './member/pages/SignOut';
 
 function App() {
   return (
@@ -28,7 +31,8 @@ function App() {
               <Route path="/" element={<Home />} />
               <Route path="/signup" element={<SignUp />} />
               <Route path="/signin" element={<SignIn />} />
-              {/* <Route path="/board" element={<ArticleList />} /> */}
+              <Route path="/signout" element={<SignOut />} />
+              <Route path="/board" element={<ArticleList />} />
               {/* <Route path="/board/:articleId" element={<ArticleDetail />} /> */}
 
               <Route path="/member" element={<MemberList />} />
@@ -36,7 +40,7 @@ function App() {
 
             <Route element={<LoginRoute />}>
               {/* <Route path="/member/:memberId" element={<MyPage />} /> */}
-              {/* <Route path="/board/create" element={<ArticleCreate />} /> */}
+              <Route path="/board/create" element={<ArticleCreate />} />
               {/* <Route path="/board/update/:memberId" element={<ArticleUpdate />} /> */}
             </Route>
 

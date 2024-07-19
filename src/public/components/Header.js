@@ -59,11 +59,11 @@ const Header = ({ mode, toggleColorMode }) => {
     const DrawerList = (
     <>
     <Box
-        sx={{width: 250}}
-        role="presentation"
         onClick={toggleDrawer(false)}
+        role="presentation"
+        sx={{width: 250}}
     >
-        <Toolbar sx={{ my: 0, width: '100%', display:'flex',  justifyContent:'space-between' }}>
+        <Toolbar sx={{ display:'flex',  justifyContent:'space-between', my: 0, width: '100%' }}>
             <ListItem>
                 <ListItemIcon>
                 </ListItemIcon>
@@ -145,20 +145,28 @@ const Header = ({ mode, toggleColorMode }) => {
     return(
         <>
         <Box sx={{
-            width: '100%',
+            borderColor: '#808080',
             borderBottom: '1px solid',
-            borderColor: '#808080'
+            width: '100%'
         }}>
         <Toolbar sx={{
           display: 'flex',
           justifyContent: 'space-between',
-          py: 1,
-          px: { xs: 2, sm: 4, md: 8}
+          px: { xs: 2, sm: 4, md: 8},
+          py: 1
         }}>
-            <IconButton sx={{ display: { xs: 'flex', sm: 'none'} }} size="large" onClick={toggleDrawer(true)}>
+            <IconButton
+                onClick={toggleDrawer(true)}
+                size="large"
+                sx={{ display: { xs: 'flex', sm: 'none'} }}
+            >
                 <MenuIcon />
             </IconButton>
-            <Drawer sx={{ display: { xs: 'flex', sm: 'none'} }} open={open} onClose={toggleDrawer(false)}>
+            <Drawer
+                onClose={toggleDrawer(false)}
+                open={open}
+                sx={{ display: { xs: 'flex', sm: 'none'} }}
+            >
                 {DrawerList}
             </Drawer>
 

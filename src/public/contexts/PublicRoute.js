@@ -12,12 +12,11 @@ const PublicRoute = () => {
     const isTokenValid = async () => {
         await axios({
             method: 'POST',
-            url: '/token/valid',
+            url: `/token/valid`,
             headers: {
                 Authorization: `Bearer ${localStorage.getItem("access_token")}`
             }
         }).then((res) => {
-            console.log(res);
             localStorage.removeItem("access_token");
             localStorage.setItem("access_token", res.data.accessToken);
         }).catch((err) => {

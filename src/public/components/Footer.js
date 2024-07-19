@@ -5,17 +5,17 @@ const Footer = () => {
     return(
         <>
         <Box sx={{
+            borderColor: 'dvider',
+            borderTop: '1px solid',
             display: 'flex',
             justifyContent: 'space-between',
             mt: 'auto',
-            py: 4,
             px: { xs: 2, sm: 4, md: 8},
-            width: '100%',
-            borderTop: '1px solid',
-            borderColor: 'dvider',
+            py: 4,
+            width: '100%'
         }}>
             <div>
-                <Typography variant="body2" color="text.secondary" mt={1}>
+                <Typography color="text.secondary" variant="body2" mt={1}>
                     {'Copyright © '}
                     <Link href="#">kmaengggong&nbsp;</Link>
                     {'2024'}
@@ -29,9 +29,9 @@ const Footer = () => {
                 sx={{color: 'text.secondary'}}
             >
                 <IconButton
+                    aria-label="GitHub"
                     color="inherit"
                     href="https://github.com/kmaengggong"
-                    aria-label="GitHub"
                     sx={{alignSelf: 'center'}}
                 >
                     <GitHubIcon />

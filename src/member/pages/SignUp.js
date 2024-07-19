@@ -23,23 +23,6 @@ const SignUp = () => {
         if(isPasswordEqual && password.length > 0) setIsPasswordValid(true);
     }, [password, isPasswordEqual]);
 
-    const onChangeEmail = (event) => {
-        setEmail(event.currentTarget.value.trim());
-        setIsEmailValid(false);
-    };
-    const onChangeNickname = (event) => {
-        setNickname(event.currentTarget.value.trim());
-        setIsNicknameValid(false);
-    };
-    const onChangePassword = (event) => {
-        setPassword(event.currentTarget.value.trim());
-        setIsPasswordValid(false);
-    };
-    const onChangePasswordCheck = (event) => {
-        setPasswordCheck(event.currentTarget.value.trim());
-        setIsPasswordValid(false);
-    };
-
     const onClickEmailCheckButton = async (event) => {
         event.preventDefault();
 
@@ -50,7 +33,7 @@ const SignUp = () => {
                 email: email
             }
         }).then((res) => {
-            if(res.status === 200 && !res.data){
+            if(!res.data){
                 setIsEmailValid(true);
                 alert("사용하셔도 좋은 이메일입니다.");
             }
@@ -75,7 +58,7 @@ const SignUp = () => {
                 nickname: nickname
             }
         }).then((res) => {
-            if(res.status === 200 && !res.data){
+            if(!res.data){
                 setIsNicknameValid(true);
                 alert("사용하셔도 좋은 닉네임입니다.");
             }
@@ -92,6 +75,7 @@ const SignUp = () => {
 
     const onFormSubmit = async (event) => {
         event.preventDefault();
+
         if(!isEmailValid){
             alert("이메일을 확인해 주세요.");
             return;
@@ -105,29 +89,21 @@ const SignUp = () => {
             return;
         }
 
-        try{
-            await axios({
-                method: 'POST',
-                url: '/member',
-                data: {
-                    email: email,
-                    nickname: nickname,
-                    password: password
-                }
-            }).then((res) => {
-                if(res.status !== 201){
-                    alert("회원가입 실패. 다시 시도해주세요.");
-                    return;
-                }
-                else{
-                    alert("회원가입 완료!");
-                    navigate(`/`);
-                }
-            })
-        } catch(error){
-            console.error(error);
+        await axios({
+            method: 'POST',
+            url: '/member',
+            data: {
+                email: email,
+                nickname: nickname,
+                password: password
+            }
+        }).then((res) => {
+            alert("회원가입 완료!");
+            navigate(`/`);
+        }).catch((err) => {
+            console.error(err);
             alert("회원가입 실패. 다시 시도해주세요.");
-        }
+        });
     };
 
     return(
@@ -135,42 +111,45 @@ const SignUp = () => {
         <Box sx={{ width: '100%' }}>
             <Box
                 sx={{
+                    alignItems: 'center',
                     display: 'flex',
                     flexDirection: 'column',
-                    alignItems: 'center',
+                    maxWidth: 'sm',
                     mt: 8,
-                    mx: 'auto',
-                    maxWidth: 'sm'
+                    mx: 'auto'
                 }}    
             >
-                <Typography variant="h4" gutterBottom>
+                <Typography gutterBottom variant="h4">
                     Sign Up
                 </Typography>
                 <Box
-                    component="form"
                     noValidate
+                    component="form"
                     onSubmit={onFormSubmit}
                     sx={{ mt:4, width:'100%' }}
                 >
-                    <Grid container spacing={2} alignItems={'center'}>
+                    <Grid container alignItems={'center'} spacing={2}>
                         <Grid item xs={12} sm={9}>
                             <TextField
-                                required
                                 fullWidth
+                                required
                                 id="email"
-                                label="이메일 주소"
                                 name="email"
+                                label="이메일 주소"
                                 autoComplete="email"
-                                onChange={onChangeEmail}
+                                onChange={(e) => {
+                                    setEmail(e.target.value.trim());
+                                    setIsEmailValid(false);
+                                }}
                             />
                         </Grid>
                         <Grid item xs={12} sm={3}>
                             <Button
-                                type="submit"
                                 fullWidth
+                                type="submit"
                                 variant="contained"
-                                sx={{my: 1}}
                                 onClick={onClickEmailCheckButton}
+                                sx={{my: 1}}
                             >
                                 확인
                             </Button>
@@ -178,21 +157,24 @@ const SignUp = () => {
 
                         <Grid item xs={12} sm={9}>
                             <TextField
-                                required
                                 fullWidth
+                                required
                                 id="nickname"
-                                label="닉네임"
                                 name="nickname"
-                                onChange={onChangeNickname}
+                                label="닉네임"
+                                onChange={(e) => {
+                                    setNickname(e.target.value.trim());
+                                    setIsNicknameValid(false);
+                                }}
                             />
                         </Grid>
                         <Grid item xs={12} sm={3}>
                             <Button
-                                type="submit"
                                 fullWidth
+                                type="submit"
                                 variant="contained"
-                                sx={{my: 1}}
                                 onClick={onClickNicknameCheckButton}
+                                sx={{my: 1}}
                             >
                                 확인
                             </Button>
@@ -200,33 +182,39 @@ const SignUp = () => {
 
                         <Grid item xs={12}>
                             <TextField
-                                required
                                 fullWidth
+                                required
+                                id="password"
                                 name="password"
                                 label="비밀번호"
                                 type="password"
-                                id="password"
                                 autoComplete="new-password"
-                                onChange={onChangePassword}
+                                onChange={(e) => {
+                                    setPassword(e.target.value.trim());
+                                    setIsPasswordValid(false);
+                                }}
                             />
                         </Grid>
                         <Grid item xs={12}>
                             <TextField
-                                required
                                 fullWidth
+                                required
+                                id="password-check"
                                 name="password-check"
                                 label="비밀번호 확인"
                                 type="password"
-                                onChange={onChangePasswordCheck}
-                                id="password-check"
-                                helperText={isPasswordEqual ? "" : "비밀번호가 일치하지 않습니다."}
                                 error={isPasswordEqual ? false : true}
+                                helperText={isPasswordEqual ? "" : "비밀번호가 일치하지 않습니다."}
+                                onChange={(e) => {
+                                    setPasswordCheck(e.target.value.trim());
+                                    setIsPasswordValid(false);
+                                }}
                             />
                         </Grid>
                     </Grid>
                     <Button
-                        type="submit"
                         fullWidth
+                        type="submit"
                         variant="contained"
                         sx={{mt: 4}}
                     >

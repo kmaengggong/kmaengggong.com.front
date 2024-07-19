@@ -9,7 +9,7 @@ const SignIn = () => {
     const isLogin = useIsLoginState();
     const {setIsLogin} = useContext(isLoginContext);
     const navigate = useNavigate();
-    const [, , removeCookie] = useCookies(["refresh_token"]);
+    const [, , removeCookie] = useCookies(['refresh_token']);
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
 
@@ -64,14 +64,14 @@ const SignIn = () => {
         <>
         <Box sx={{width: '100%'}}>
             <Box sx={{
+                alignItems: 'center',
                 display: 'flex',
                 flexDirection: 'column',
-                alignItems: 'center',
+                maxWidth: '400px',
                 mt: 8,
-                mx: 'auto',
-                maxWidth: '400px'
+                mx: 'auto'
             }}>
-                <Typography variant="h4" gutterBottom>
+                <Typography gutterBottom variant="h4">
                     Sign In
                 </Typography>
                 <Box
@@ -80,39 +80,39 @@ const SignIn = () => {
                     onSubmit={onFormSubmit}
                     sx={{ mt:4, width:'100%' }}
                 >
-                    <Grid container spacing={2} alignItems={'center'}>
+                    <Grid container alignItems={'center'} spacing={2}>
                         <Grid item xs={12}>
                             <TextField
-                                required
                                 fullWidth
+                                required
                                 id="email"
-                                label="이메일 주소"
                                 name="email"
+                                label="이메일 주소"
                                 autoComplete="email"
                                 onChange={(e) => {
-                                    setEmail(e.target.value);
+                                    setEmail(e.target.value.trim());
                                 }}
                             />
                         </Grid>
                         <Grid item xs={12}>
                             <TextField
-                                required
                                 fullWidth
+                                required
+                                id="password"
                                 name="password"
                                 label="비밀번호"
                                 type="password"
-                                id="password"
                                 autoComplete="new-password"
                                 onChange={(e) => {
-                                    setPassword(e.target.value);
+                                    setPassword(e.target.value.trim());
                                 }}
                                 value={password || ''}
                             />
                         </Grid>
                     </Grid>
                     <Button
-                        type="submit"
                         fullWidth
+                        type="submit"
                         variant="contained"
                         sx={{mt: 4}}
                     >
