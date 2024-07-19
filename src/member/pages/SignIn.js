@@ -1,33 +1,34 @@
 import { Box, Button, Grid, TextField, Typography } from "@mui/material";
 import axios from "axios";
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { isLoginContext, useIsLoginState } from "../contexts/IsLoginContext";
+import { useCookies } from "react-cookie";
 
 const SignIn = () => {
-    // const isLogin = useIsLoginState();
-    // const {setIsLogin} = useContext(isLoginContext);
+    const isLogin = useIsLoginState();
+    const {setIsLogin} = useContext(isLoginContext);
     const navigate = useNavigate();
-    // const [, , removeCookie] = useCookies(["refresh_token"]);
+    const [, , removeCookie] = useCookies(["refresh_token"]);
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
 
-    // useEffect(() => {
-    //     if(isLogin){
-    //         navigate(`/`);
-    //         return;
-    //     }
-    // }, [isLogin]);
+    useEffect(() => {
+        if(!password){
+            setPassword('');
+        }
+    }, []);
 
-    const onChangeEmail = (event) => {
-        setEmail(event.target.value);
-    };
-    const onChangePassword = (event) => {
-        setPassword(event.target.value);
-    };
+    useEffect(() => {
+        if(isLogin){
+            navigate(`/`);
+            return;
+        }
+    }, [isLogin]);
 
     const onFormSubmit = async (event) => {
         event.preventDefault();
-        // removeCookie("refresh_token");
+        removeCookie("refresh_token");
 
         await axios({
             method: 'POST',
@@ -35,21 +36,19 @@ const SignIn = () => {
             data: {
                 email: email,
                 password: password
-            },
-            timeout: 5000
+            }
         }).then((res) => {
             // 여기서 토큰 받은거 확인
             console.log(res.data);
-            // localStorage.setItem("access_token", res.data.accessToken);
-            // setIsLogin(true);
+            localStorage.setItem("access_token", res.data.accessToken);
+            setIsLogin(true);
             alert("로그인 되었습니다.");
             navigate(`/`);
             window.location.reload();
         }).catch((err) => {
-            if(err.response && (err.response.status === 404 || err.response.status === 200)){
+            if(err.response && (err.response.status === 400 || err.response.status === 404)){
                 alert("이메일 혹은 비밀번호를 확인해주세요.");
-                navigate(`/signin`);
-                window.location.reload();
+                setPassword('');
             }
             else{
                 console.error(err);
@@ -90,7 +89,9 @@ const SignIn = () => {
                                 label="이메일 주소"
                                 name="email"
                                 autoComplete="email"
-                                onChange={onChangeEmail}
+                                onChange={(e) => {
+                                    setEmail(e.target.value);
+                                }}
                             />
                         </Grid>
                         <Grid item xs={12}>
@@ -102,7 +103,10 @@ const SignIn = () => {
                                 type="password"
                                 id="password"
                                 autoComplete="new-password"
-                                onChange={onChangePassword}
+                                onChange={(e) => {
+                                    setPassword(e.target.value);
+                                }}
+                                value={password || ''}
                             />
                         </Grid>
                     </Grid>

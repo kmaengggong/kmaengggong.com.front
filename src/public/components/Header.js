@@ -1,7 +1,6 @@
-import { Box, Divider, Drawer, IconButton, List, ListItem, ListItemButton, ListItemIcon, ListItemText, MenuItem, Toolbar, Typography, createTheme } from '@mui/material';
-import { useNavigate } from 'react-router-dom';
-// import { useIsLoginState } from '../../user/contexts/IsLoginContext';
+import { Box, Divider, Drawer, IconButton, List, ListItem, ListItemButton, ListItemIcon, ListItemText, MenuItem, Toolbar, Typography } from '@mui/material';
 import PropTypes from 'prop-types';
+import { useNavigate } from 'react-router-dom';
 // import ToggleColorMode from './ToggleColorMode';
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 import AssignmentIndIcon from '@mui/icons-material/AssignmentInd';
@@ -10,23 +9,23 @@ import LoginIcon from '@mui/icons-material/Login';
 import LogoutIcon from '@mui/icons-material/Logout';
 import LunchDiningIcon from '@mui/icons-material/LunchDining';
 import MenuIcon from '@mui/icons-material/Menu';
-import { useState } from 'react';
-// import getUserId from '../../user/components/getUserId';
+import { useEffect, useState } from 'react';
+import { useIsLoginState } from '../../member/contexts/IsLoginContext';
+import getMemberId from '../../member/components/getMemberId';
 
 // const theme = createTheme({});
 
 const Header = ({ mode, toggleColorMode }) => {
-    // const isLogin = useIsLoginState();
-    const isLogin = false;
+    const isLogin = useIsLoginState();
     const navigate = useNavigate();
     const [open, setOpen] = useState(false);
     const [memberId, setMemberId] = useState(null);
 
-    // useEffect(() => {
-    //     if(isLogin){
-    //         setMemberId(getUserId());
-    //     }
-    // }, []);
+    useEffect(() => {
+        if(isLogin){
+            setMemberId(getMemberId());
+        }
+    }, []);
 
     const toggleDrawer = (newOpen) => () => {
         setOpen(newOpen);

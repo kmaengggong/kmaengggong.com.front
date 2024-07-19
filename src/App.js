@@ -7,6 +7,9 @@ import { Box, Container } from '@mui/material';
 import Footer from './public/components/Footer';
 import Header from './public/components/Header';
 import SignIn from './member/pages/SignIn';
+import PublicRoute from './public/contexts/PublicRoute';
+import NotFound from './public/pages/NotFound';
+import LoginRoute from './public/contexts/LoginRoute';
 
 function App() {
   return (
@@ -21,10 +24,23 @@ function App() {
         <Header />
         <Container sx={{mt: 4, mb: 8}}>
           <Routes>
-            <Route path="/" element={<Home />} />
-            <Route path="/member" element={<MemberList />} />
-            <Route path="/signup" element={<SignUp />} />
-            <Route path="/signin" element={<SignIn />} />
+            <Route element={<PublicRoute />}>
+              <Route path="/" element={<Home />} />
+              <Route path="/signup" element={<SignUp />} />
+              <Route path="/signin" element={<SignIn />} />
+              {/* <Route path="/board" element={<ArticleList />} /> */}
+              {/* <Route path="/board/:articleId" element={<ArticleDetail />} /> */}
+
+              <Route path="/member" element={<MemberList />} />
+            </Route>
+
+            <Route element={<LoginRoute />}>
+              {/* <Route path="/member/:memberId" element={<MyPage />} /> */}
+              {/* <Route path="/board/create" element={<ArticleCreate />} /> */}
+              {/* <Route path="/board/update/:memberId" element={<ArticleUpdate />} /> */}
+            </Route>
+
+            <Route path="*" element={<NotFound />} />
           </Routes>
         </Container>
         <Footer />

@@ -6,13 +6,19 @@ import reportWebVitals from './reportWebVitals';
 import { BrowserRouter } from 'react-router-dom';
 import { ThemeProvider } from '@emotion/react';
 import Theme from './public/components/Theme';
+import { IsLoginProvider } from './member/contexts/IsLoginContext';
+import { CookiesProvider } from 'react-cookie';
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
   <BrowserRouter>
-    <ThemeProvider theme={Theme}>
-      <App />
-    </ThemeProvider>
+    <CookiesProvider>
+      <ThemeProvider theme={Theme}>
+        <IsLoginProvider>
+          <App />
+        </IsLoginProvider>
+      </ThemeProvider>
+    </CookiesProvider>
   </BrowserRouter>
 );
 

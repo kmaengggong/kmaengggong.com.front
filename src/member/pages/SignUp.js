@@ -73,8 +73,7 @@ const SignUp = () => {
             url: '/member/nickname',
             params: {
                 nickname: nickname
-            },
-            timeout: 5000
+            }
         }).then((res) => {
             if(res.status === 200 && !res.data){
                 setIsNicknameValid(true);
