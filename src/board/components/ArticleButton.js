@@ -1,4 +1,5 @@
 import { Box, Button, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle } from "@mui/material";
+import axios from "axios";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 
@@ -40,27 +41,20 @@ const ArticleButton = ({
     const onClickDeleteDialogYesButton = async (event) => {
         event.preventDefault();
 
-        try{
-            await fetch(`/api/board/${articleId}`, {
-                method: "DELETE",
-                headers:{
-                    "Content-Type":"application/json; charset=utf-8"
-                },
-                body: JSON.stringify({
-                    "articleId": article.articleId
-                })
-            }).then((res) => {
-                if(res.status !== 200){
-                    alert("글 삭제에 문제가 생겼습니다. 다시 시도해주세요.");
-                    return;
-                }
-                alert("글 삭제 성공!");
-                navigate("/board/list");
-            })
-        } catch(error){
-            console.error(error);
+        await axios({
+            method: 'DELETE',
+            url: `/board/${articleId}`,
+            header: {
+                Authorization: `Bearer ${localStorage.getItem("access_token")}`
+            }
+        }).then((res) => {
+            alert("글 삭제 성공!");
+            setDeleteDialogOpen(false);
+            navigate("/board");
+        }).catch((err) => {
+            console.error(err);
             alert("글 삭제에 문제가 생겼습니다. 다시 시도해주세요.");
-        }
+        });
     };
 
     return (

@@ -34,8 +34,9 @@ const ArticleList = () => {
                 return;
             }
             else{
-                setTotalPage(res.data.totalPages);
-                const articles = res.data.map((item) => ({
+                console.log(res.data.page.totalPages);
+                setTotalPage(res.data.page.totalPages);
+                const articles = res.data._embedded.boardResponseList.map((item) => ({
                     articleId: item.articleResponse.articleId,
                     authorId: item.articleResponse.authorId,
                     nickname: item.articleResponse.nickname,
@@ -67,7 +68,7 @@ const ArticleList = () => {
     }
     const onChangePagination = (event, value) => {
         setPage(value);
-        navigate(`/board/list?page=${value}`);
+        navigate(`/board?page=${value}`);
     };
 
     return(
@@ -112,7 +113,7 @@ const ArticleList = () => {
                                     </Typography>
                                     <div> 
                                     <Typography
-                                        variant="h6"
+                                        variant="h7"
                                         color="text.secondary"
                                         gutterBottom
                                         sx={{
@@ -126,6 +127,7 @@ const ArticleList = () => {
                                     >
                                         {article.content}
                                     </Typography>
+                                    <Typography sx={{display: {xs: 'none', sm: 'flex'}}}>&nbsp;</Typography>
                                     </div>
                                     <Typography variant="body2" color="text.secondary">
                                         {article.categoryName}

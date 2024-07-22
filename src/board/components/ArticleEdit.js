@@ -13,12 +13,6 @@ const ArticleEdit = ({
 }) => {
     const navigate = useNavigate();
 
-    const onChangeTitle = (event) => {
-        setTitle(event.target.value);
-    };
-    // const onChangeType = (event) => {
-    //     setCategory(event.target.value);
-    // };
     const onChangeHeaderImage = async (event) => {
         // event.preventDefault();
 
@@ -106,11 +100,12 @@ const ArticleEdit = ({
                 authorId: authorId,
                 title: title,
                 content: htmlStr,
-                headerImage: headerImage
-                // category: category
+                headerImage: headerImage,
+                categoryId: category
             }
         }).then((res) => {
             if(res.headers.location){
+                alert("글 작성 성공!");
                 window.location.href = res.headers.location;
             }
         }).catch((err) => {
@@ -217,10 +212,12 @@ const ArticleEdit = ({
                         label="제목"
                         value={title}
                         fullWidth
-                        onChange={onChangeTitle}
+                        onChange={(e) => {
+                            setTitle(e.target.value);
+                        }}
                     />
                 </Grid>
-                {/* <Grid item xs={12} sm={2}>
+                <Grid item xs={12} sm={2}>
                     <FormControl fullWidth>
                         <InputLabel id="ype-select-label">카테고리</InputLabel>
                         <Select
@@ -228,13 +225,15 @@ const ArticleEdit = ({
                             id="demo-simple-select"
                             value={category}
                             label="카테고리"
-                            onChange={onChangeType}
+                            onChange={(e) => {
+                                setCategory(e.target.value);
+                            }}
                         >
                             <MenuItem value={1}>공지</MenuItem>
                             <MenuItem value={2}>일반</MenuItem>
                         </Select>
                     </FormControl>
-                </Grid> */}
+                </Grid>
                 <Grid item xs={12}>
                     <QuillEditor htmlStr={htmlStr} setHtmlStr={setHtmlStr} />
                 </Grid>
