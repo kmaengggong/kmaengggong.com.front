@@ -5,7 +5,7 @@ import axios from "axios";
 
 const ArticleEdit = ({
     editType,
-    memberId, articleId,
+    authorId, articleId,
     title, setTitle,
     category, setCategory,
     fileUrl, setFileUrl,
@@ -103,7 +103,7 @@ const ArticleEdit = ({
                 Authorization: `Bearer ${localStorage.getItem("access_token")}`
             },
             data: {
-                authorId: memberId,
+                authorId: authorId,
                 title: title,
                 content: htmlStr,
                 headerImage: headerImage
@@ -147,34 +147,29 @@ const ArticleEdit = ({
         // }
     };
 
-    // const onFormUpdateSubmit = async (event) => {
-    //     event.preventDefault();
-    //     try{
-    //         await fetch(`/api/board/${articleId}`, {
-    //             method: "PATCH",
-    //             headers:{
-    //                 "Content-Type":"application/json; charset=utf-8"
-    //             },
-    //             body: JSON.stringify({
-    //                 "articleId": articleId,
-    //                 "articleTitle": title,
-    //                 "articleHeaderImage": fileUrl,
-    //                 "articleContent": htmlStr,
-    //                 "categoryId" : category,
-    //             })
-    //         }).then((res) => {
-    //             if(res.status !== 200){
-    //                 alert("글 수정 과정에 문제가 생겼습니다. 다시 시도해주세요.");
-    //                 return null;
-    //             }
-    //             alert("글 수정 성공!");
-    //             navigate(`/board/${articleId}`);
-    //         });
-    //     } catch(error){
-    //         console.error(error);
-    //         alert("글 수정 과정에 문제가 생겼습니다. 다시 시도해주세요.");
-    //     }
-    // };
+    const onFormUpdateSubmit = async (event) => {
+        event.preventDefault();
+
+        await axios({
+            method: 'PATCH',
+            url: `/board/${articleId}`,
+            header: {
+                Authorization: `Bearer ${localStorage.getItem("access_token")}`
+            },
+            data: {
+                authorId: authorId,
+                title: title,
+                content: htmlStr,
+                headerImage: fileUrl
+                // category: category
+            }
+        }).then((res) => {
+            alert("글 수정 성공!");
+            navigate(`/board/${articleId}`)
+        }).catch((err) => {
+            console.error("글 수정 과정에 문제가 생겼습니다. 다시 시도해주세요.");
+        });
+    };
 
     return (
         <>
@@ -250,10 +245,10 @@ const ArticleEdit = ({
                 <Button variant="contained" onClick={onFormCreateSubmit}>
                     작성
                 </Button>
-                : editType === 'update' ? <></>
-                // <Button variant="contained" onClick={onFormUpdateSubmit}>
-                //     수정
-                // </Button>
+                : editType === 'update' ?
+                <Button variant="contained" onClick={onFormUpdateSubmit}>
+                    수정
+                </Button>
                 : <></>
                 }
 

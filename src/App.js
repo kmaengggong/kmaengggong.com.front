@@ -13,6 +13,8 @@ import LoginRoute from './public/contexts/LoginRoute';
 import ArticleList from './board/pages/ArticleList';
 import ArticleCreate from './board/pages/ArticleCreate';
 import SignOut from './member/pages/SignOut';
+import ArticleDetail from './board/pages/ArticleDetail';
+import ArticleUpdate from './board/pages/ArticleUpdate';
 
 function App() {
   return (
@@ -33,7 +35,7 @@ function App() {
               <Route path="/signin" element={<SignIn />} />
               <Route path="/signout" element={<SignOut />} />
               <Route path="/board" element={<ArticleList />} />
-              {/* <Route path="/board/:articleId" element={<ArticleDetail />} /> */}
+              <Route path="/board/:articleId" element={<ArticleDetail />} />
 
               <Route path="/member" element={<MemberList />} />
             </Route>
@@ -41,7 +43,7 @@ function App() {
             <Route element={<LoginRoute />}>
               {/* <Route path="/member/:memberId" element={<MyPage />} /> */}
               <Route path="/board/create" element={<ArticleCreate />} />
-              {/* <Route path="/board/update/:memberId" element={<ArticleUpdate />} /> */}
+              <Route path="/board/update/:articleId" element={<ArticleUpdate />} />
             </Route>
 
             <Route path="*" element={<NotFound />} />

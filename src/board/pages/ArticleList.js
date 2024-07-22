@@ -1,10 +1,11 @@
-import { Box, Button, Card, CardActionArea, CardContent, CardMedia, IconButton, InputBase, Pagination, Typography } from '@mui/material';
+import { Box, Button, Card, CardActionArea, CardContent, CardMedia, Grid, IconButton, InputBase, Pagination, Typography } from '@mui/material';
 import { useEffect, useState } from 'react';
 import Loading from '../../public/components/Loading';
 import { Link, useNavigate, useParams, useSearchParams } from 'react-router-dom';
 import getFormatDate from '../../public/components/getFormatDate';
 import { useIsLoginState } from '../../member/contexts/IsLoginContext';
 import SearchIcon from '@mui/icons-material/Search';
+import CommentIcon from '@mui/icons-material/Comment';
 import axios from 'axios';
 
 // 순서대로 수정. id name label type
@@ -33,32 +34,26 @@ const ArticleList = () => {
                 return;
             }
             else{
-                console.log(res.data);
                 setTotalPage(res.data.totalPages);
-                formatDateInList(res.data);
-                setArticleList(res.data);
-                console.log(articleList);
+                const articles = res.data.map((item) => ({
+                    articleId: item.articleResponse.articleId,
+                    authorId: item.articleResponse.authorId,
+                    nickname: item.articleResponse.nickname,
+                    title: item.articleResponse.title,
+                    content: formatArticleContent(item.articleResponse.content),
+                    headerImage: item.articleResponse.headerImage,
+                    categoryName: item.articleResponse.categoryName,
+                    createdAt: getFormatDate(item.articleResponse.createdAt, 0),
+                    updatedAt: getFormatDate(item.articleResponse.updatedAt, 0),
+                    commentLength: item.commentResponse.length,
+                }));
+                setArticleList(articles);
             }
         }).catch((err) => {
             console.error(err);
             alert("글 리스트 조회 과정에 문제가 생겼습니다. 다시 시도해주세요.");
         });
     }
-
-    const formatDateInList = (list) => {
-        return list.map(({ articleRequest, ...rest }) => {
-            const { createdAt, updatedAt, content } = articleRequest;
-            return {
-                ...rest,
-                articleRequest: {
-                    ...articleRequest,
-                    createdAt: createdAt ? getFormatDate(createdAt, 0) : createdAt,
-                    updatedAt: updatedAt ? getFormatDate(updatedAt, 0) : updatedAt,
-                    content: content ? formatArticleContent(content) : content
-                }
-            };
-        });
-    };
 
     const formatArticleContent = (articleContent) => {
         if (!articleContent) return '';
@@ -87,10 +82,10 @@ const ArticleList = () => {
         articleList === null ? <Loading /> :
         <Box>
             {articleList.map((article) => (
-            <Card key={article.articleRequest.articleId} sx={{my: 1}}>
+            <Card key={article.articleId} sx={{my: 1}}>
                 <CardActionArea
                     component={Link}
-                    to={`/board/${article.articleRequest.articleId}`}
+                    to={`/board/${article.articleId}`}
                     sx={{
                         display: 'flex',
                         width: "100%",
@@ -100,7 +95,7 @@ const ArticleList = () => {
                 >
                     <CardMedia
                         component="img"
-                        image={article.articleRequest.headerImage}
+                        image={article.headerImage}
                         alt="Header Image"
                         sx={{
                             width: {xs: 100, sm: 150},
@@ -110,32 +105,41 @@ const ArticleList = () => {
                     {/* sx={{overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap", display:"inline-block"}} */}
                     <Box sx={{ width: '100%', px:1 }}>
                         <CardContent sx={{textAlign: 'start'}}>
-                            <Typography variant="h5" sx={{pt: '7px'}}>
-                                {article.title}
-                            </Typography>
-                            <div> 
-                            <Typography
-                                variant="h6"
-                                color="text.secondary"
-                                gutterBottom
-                                sx={{
-                                    pt: '2px',
-                                    overflow: "hidden",
-                                    textOverflow: "ellipsis",
-                                    display: "-webkit-box",
-                                    WebkitLineClamp: "1",
-                                    WebkitBoxOrient: "vertical",
-                                }}
-                            >
-                                {formatArticleContent(article.articleRequest.content)}
-                            </Typography>
-                            </div>
-                            <Typography variant="body2" color="text.secondary">
-                                카테고리{/* {article.category.categoryName} */}
-                                &nbsp;|&nbsp;
-                                {article.articleRequest.createdAt}&nbsp;
-                                by 닉네임들어갈자리
-                            </Typography>
+                            <Grid container alignItems="center">
+                                <Grid item xs={11}>
+                                    <Typography variant="h5" sx={{pt: '7px'}}>
+                                        {article.title}
+                                    </Typography>
+                                    <div> 
+                                    <Typography
+                                        variant="h6"
+                                        color="text.secondary"
+                                        gutterBottom
+                                        sx={{
+                                            pt: '2px',
+                                            overflow: "hidden",
+                                            textOverflow: "ellipsis",
+                                            display: "-webkit-box",
+                                            WebkitLineClamp: "1",
+                                            WebkitBoxOrient: "vertical",
+                                        }}
+                                    >
+                                        {article.content}
+                                    </Typography>
+                                    </div>
+                                    <Typography variant="body2" color="text.secondary">
+                                        {article.categoryName}
+                                        &nbsp;|&nbsp;
+                                        {article.createdAt}&nbsp;
+                                        by {article.nickname}
+                                    </Typography>
+                                </Grid>
+                                <Grid item xs={1}>
+                                    <Typography variant="h6">
+                                        <CommentIcon />&nbsp;{article.commentLength}
+                                    </Typography>
+                                </Grid>
+                            </Grid>
                         </CardContent>
                     </Box>
                 </CardActionArea>

@@ -25,7 +25,7 @@ const ArticleCreate = () => {
 
             <ArticleEdit
                 editType={"create"}
-                memberId={memberId}
+                authorId={memberId}
                 title={title}
                 setTitle={setTitle}
                 category={category}
