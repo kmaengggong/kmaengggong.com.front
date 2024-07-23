@@ -43,6 +43,7 @@ const ArticleDetail = () => {
             method: 'GET',
             url: `/board/${articleId}`
         }).then((res) => {
+            console.log(res.data);
             setArticle(res.data.articleResponse);
             setCommentList(res.data.commentResponse);
         }).catch((err) => {
@@ -88,7 +89,6 @@ const ArticleDetail = () => {
                 content: newComment
             }
         }).then((res) => {
-            console.log(res);
             alert("댓글 작성 성공!");
             window.location.reload();
         }).catch((err) => {
@@ -190,8 +190,8 @@ const ArticleDetail = () => {
                     commentId={comment.commentId}
                     authorId={memberId}
                     articleId={articleId}
+                    marginLeft={0}
                 />
-
                 <Divider />
                 </div>
             ))}

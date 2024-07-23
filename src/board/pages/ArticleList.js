@@ -44,7 +44,7 @@ const ArticleList = () => {
                     categoryName: item.articleResponse.categoryName,
                     createdAt: getFormatDate(item.articleResponse.createdAt, 0),
                     updatedAt: getFormatDate(item.articleResponse.updatedAt, 0),
-                    commentLength: item.commentResponse.length,
+                    commentLength: item.articleResponse.commentLength,
                 }));
                 setArticleList(articles);
             }

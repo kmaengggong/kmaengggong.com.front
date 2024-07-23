@@ -1,15 +1,17 @@
 import { useEffect, useState } from "react";
-import { Accordion, AccordionDetails, AccordionSummary, Avatar, Button, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, IconButton, ListItem, ListItemText, Stack, TextField, Typography } from "@mui/material";
+import { Accordion, AccordionDetails, AccordionSummary, Avatar, Button, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, Divider, IconButton, ListItem, ListItemText, Stack, TextField, Typography } from "@mui/material";
 import EditIcon from '@mui/icons-material/Edit';
 import CheckIcon from '@mui/icons-material/Check';
 import DeleteIcon from '@mui/icons-material/Delete';
 import SubdirectoryArrowRightIcon from '@mui/icons-material/SubdirectoryArrowRight';
 import ClearIcon from '@mui/icons-material/Clear';
+import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
 import axios from "axios";
 
 const CommentList = ({
     comment, commentId,
-    authorId, articleId
+    authorId, articleId,
+    marginLeft, isReply
 }) => {
     const [isDisabled, setIsDisabled] = useState(false);
     const [newNewComment, setNewNewComment] = useState('');
@@ -27,6 +29,12 @@ const CommentList = ({
         if(isEditMode) event.stopPropagation();
     };
 
+    // 좋아요
+    const onClickCommentLikeButton = (event) => {
+        event.preventDefault();
+        event.stopPropagation();
+    }
+
     // 수정
     const onClickCommentEditButton = (event) => {
         event.preventDefault();
@@ -37,11 +45,7 @@ const CommentList = ({
 
     const onClickCheckEditButton = async (event) => {
         event.preventDefault();
-        // event.stopPropagation();
-        // console.log(comemntId);
-        // console.log(authorId);
-        // console.log(commentContent);
-        
+
         await axios({
             method: 'PATCH',
             url: `/comment/${commentId}`,
@@ -69,10 +73,6 @@ const CommentList = ({
     const onClickEditComment = (event) => {
         event.preventDefault();
         // event.stopPropagation();
-    };
-
-    const onChangeEditComment = (event) => {
-        setEditComment(event.target.value);
     };
 
     // 삭제
@@ -106,41 +106,37 @@ const CommentList = ({
     }
 
     // 대댓글
-    const onChangeNewComment = (event) => {
-        setNewNewComment(event.target.value);
-    };
-    
     const onClickCommentReplyButton = async (event) => {
         event.preventDefault();
 
-        try{
-            await fetch(`/api/board/comment-create`, {
-                method: "POST",
-                headers:{
-                    "Content-Type":"application/json; charset=utf-8"
-                },
-                body: JSON.stringify({
-                    "authorId": authorId,
-                    "articleId": articleId,
-                    "content": newNewComment,
-                    "parentId": commentId
-                })
-            }).then((res) => {
-                if(res.status !== 200){
-                    alert("대댓글 작성에 문제가 생겼습니다. 다시 시도해주세요.");
-                    return;
-                }
-                alert("대댓글 작성 성공!");
-                window.location.reload();
-            })
-        } catch(error){
-            console.error(error);
+        await axios({
+            method: 'POST',
+            url: `/comment`,
+            header: {
+                Authorization: `Bearer ${localStorage.getItem("access_token")}`
+            },
+            data: {
+                parentId: commentId,
+                authorId: authorId,
+                articleId: articleId,
+                content: newNewComment
+            }
+        }).then((res) => {
+            alert("대댓글 작성 성공!");
+            window.location.reload();
+        }).catch((err) => {
+            console.error(err);
             alert("대댓글 작성에 문제가 생겼습니다. 다시 시도해주세요.");
-        }
+        })
     };
 
     return (
-        <Accordion disabled={isDisabled} onClick={onClickAccordion}>
+        <>
+        <Accordion
+            disabled={isDisabled}
+            onClick={onClickAccordion}
+            sx={{ml: marginLeft, mb: 1}}
+        >
             <AccordionSummary
                 // expandIcon={<SubdirectoryArrowRightIcon color="success" />}
             >
@@ -162,21 +158,30 @@ const CommentList = ({
                     </Typography>
                 </Stack>
                 {!isEditMode ?
+                        <>
+                        {isReply && <SubdirectoryArrowRightIcon sx={{mr: 1}} />}
                         <ListItemText>
                             {comment.content}
                         </ListItemText>
+                        </>
                         :
                         <TextField
                             fullWidth
                             value={editComment}
                             onClick={onClickEditComment}
-                            onChange={onChangeEditComment}
+                            onChange={(e) => {
+                                setEditComment(e.target.value);
+                            }}
                             sx={{mr: 2}}
                         />
                 }
                 {authorId !== comment.authorId ? <></> :
                     !isEditMode ?
                     <>
+                        <IconButton onClick={onClickCommentLikeButton}>
+                            <FavoriteBorderIcon color="error" />
+                        </IconButton>
+                        <Typography sx={{mr: 2}}>&nbsp;0{comment.like}</Typography>
                         <IconButton sx={{mr: 2}} onClick={onClickCommentEditButton}>
                             <EditIcon color="warning" />
                         </IconButton>
@@ -209,7 +214,9 @@ const CommentList = ({
                         fullWidth
                         multiline
                         minRows={2}
-                        onChange={onChangeNewComment}
+                        onChange={(e) => {
+                            setNewNewComment(e.target.value);
+                        }}
                     />
                     <Button
                         type="submit"
@@ -251,6 +258,22 @@ const CommentList = ({
                 </Stack>
             </AccordionDetails>
         </Accordion>
+        
+        {comment.replies.length > 0 &&
+            comment.replies.map((children) => (
+                <div key={children.commentId}>
+                    <CommentList
+                        comment={children}
+                        commentId={children.commentId}
+                        authorId={authorId}
+                        articleId={articleId}
+                        marginLeft={marginLeft+4}
+                        isReply={true}
+                    />
+                </div>
+            ))
+        }
+        </>
     );
 };
 
