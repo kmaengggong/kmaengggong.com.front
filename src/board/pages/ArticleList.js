@@ -1,19 +1,18 @@
-import { Box, Button, Card, CardActionArea, CardContent, CardMedia, Grid, IconButton, InputBase, Pagination, Typography } from '@mui/material';
-import { useEffect, useState } from 'react';
-import Loading from '../../public/components/Loading';
-import { Link, useNavigate, useParams, useSearchParams } from 'react-router-dom';
-import getFormatDate from '../../public/components/getFormatDate';
-import { useIsLoginState } from '../../member/contexts/IsLoginContext';
-import SearchIcon from '@mui/icons-material/Search';
 import CommentIcon from '@mui/icons-material/Comment';
+import SearchIcon from '@mui/icons-material/Search';
+import { Box, Button, Card, CardActionArea, CardContent, CardMedia, Grid, IconButton, InputBase, Pagination, Typography } from '@mui/material';
 import axios from 'axios';
+import { useEffect, useState } from 'react';
+import { Link, useNavigate, useSearchParams } from 'react-router-dom';
+import { useIsLoginState } from '../../member/contexts/IsLoginContext';
+import getFormatDate from '../../public/components/getFormatDate';
+import Loading from '../../public/components/Loading';
 
 // 순서대로 수정. id name label type
 const ArticleList = () => {
     const isLogin = useIsLoginState();
     const navigate = useNavigate();
     const [searchParams, setSerachParams] = useSearchParams();
-
     const [articleList, setArticleList] = useState(null);
     const [page, setPage] = useState(searchParams.get("page") !== null ? Number(searchParams.get("page")) : 1);
     const [totalPage, setTotalPage] = useState(1);
@@ -29,12 +28,11 @@ const ArticleList = () => {
             url: `/board?page=${page}`
         }).then((res) => {
             if(res.data.length < 1){
-                setIsEmpty(true)
+                setIsEmpty(true);
                 alert("글이 존재하지 않습니다.");
                 return;
             }
             else{
-                console.log(res.data.page.totalPages);
                 setTotalPage(res.data.page.totalPages);
                 const articles = res.data._embedded.boardResponseList.map((item) => ({
                     articleId: item.articleResponse.articleId,

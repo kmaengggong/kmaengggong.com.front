@@ -9,6 +9,7 @@ import getFormatDate from "../../public/components/getFormatDate";
 import ArticleButton from "../components/ArticleButton";
 import "../style/quill-content.css";
 import axios from "axios";
+import CommentList from "../components/CommentList";
 
 const ArticleDetail = () => {
     const isLogin = useIsLoginState();
@@ -36,10 +37,6 @@ const ArticleDetail = () => {
             setIsAuthor(true);
         }
     }, [article, isLogin]);
-
-    const onChangeComment = (event) => {
-        setNewComment(event.target.value);
-    };
 
     const fetchData = async () => {
         await axios({
@@ -79,29 +76,26 @@ const ArticleDetail = () => {
             return;
         }
 
-        try{
-            await fetch(`/api/comment`, {
-                method: "POST",
-                headers:{
-                    "Content-Type":"application/json; charset=utf-8"
-                },
-                body: JSON.stringify({
-                    "authorId": memberId,
-                    "articleId": article.articleId,
-                    "commentContent": newComment
-                })
-            }).then((res) => {
-                if(res.status !== 200){
-                    alert("댓글 작성에 문제가 생겼습니다. 다시 시도해주세요.");
-                    return;
-                }
-                alert("댓글 작성 성공!");
-                window.location.reload();
-            })
-        } catch(error){
-            console.error(error);
+        await axios({
+            method: 'POST',
+            url: `/comment`,
+            header: {
+                Authorization: `Bearer ${localStorage.getItem("access_token")}`
+            },
+            data: {
+                authorId: memberId,
+                articleId: articleId,
+                content: newComment
+            }
+        }).then((res) => {
+            console.log(res);
+            alert("댓글 작성 성공!");
+            window.location.reload();
+        }).catch((err) => {
+            console.error(err);
             alert("댓글 작성에 문제가 생겼습니다. 다시 시도해주세요.");
-        }
+            return;
+        });
     };
 
     return (
@@ -189,7 +183,7 @@ const ArticleDetail = () => {
             <Divider />
 
             <List disablePadding>
-            {/* {commentList.map((comment) => (
+            {commentList.map((comment) => (
                 <div key={comment.commentId}>
                 <CommentList
                     comment={comment}
@@ -200,7 +194,7 @@ const ArticleDetail = () => {
 
                 <Divider />
                 </div>
-            ))} */}
+            ))}
             </List>
             <Stack
                 component="form"
@@ -212,7 +206,9 @@ const ArticleDetail = () => {
                     fullWidth
                     multiline
                     minRows={2}
-                    onChange={onChangeComment}
+                    onChange={(e) => {
+                        setNewComment(e.target.value);
+                    }}
                 />
                 <Button type="submit" variant="contained">댓글쓰기</Button>
             </Stack>

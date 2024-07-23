@@ -25,7 +25,6 @@ const PublicRoute = () => {
             }
             else{
                 console.error(err);
-                alert("로그인 정보에 문제가 있어 로그아웃 되었습니다.")
             }
             localStorage.removeItem("access_token");
             removeCookie("refresh_token");

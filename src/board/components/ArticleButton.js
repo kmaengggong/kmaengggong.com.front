@@ -19,7 +19,7 @@ const ArticleButton = ({
             return;
         }
 
-        navigate(`/board/update/${articleId}`);
+        navigate(`/board/${articleId}/update`);
     };
 
     const onClickArticleDeleteButton = (event) => {

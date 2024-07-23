@@ -15,6 +15,7 @@ import ArticleCreate from './board/pages/ArticleCreate';
 import SignOut from './member/pages/SignOut';
 import ArticleDetail from './board/pages/ArticleDetail';
 import ArticleUpdate from './board/pages/ArticleUpdate';
+import MyPage from './member/pages/MyPage';
 
 function App() {
   return (
@@ -41,9 +42,15 @@ function App() {
             </Route>
 
             <Route element={<LoginRoute />}>
-              {/* <Route path="/member/:memberId" element={<MyPage />} /> */}
+              <Route path="/member/:memberId" element={<MyPage />} />
               <Route path="/board/create" element={<ArticleCreate />} />
-              <Route path="/board/update/:articleId" element={<ArticleUpdate />} />
+              <Route path="/board/:articleId/update" element={<ArticleUpdate />} />
+              {/* <Route element={<PrivateRoute />}>
+                <Route path="/member/:memberId/update" element={<MemberUpdate />} />
+                <Route path="/member/:memberId/update-password" element={<MemberPasswordUpdate />} />
+              </Route>
+              <Route element={<AdminRoute />}>
+              </Route> */}
             </Route>
 
             <Route path="*" element={<NotFound />} />

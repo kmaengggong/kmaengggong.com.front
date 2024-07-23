@@ -155,8 +155,8 @@ const ArticleEdit = ({
                 authorId: authorId,
                 title: title,
                 content: htmlStr,
-                headerImage: fileUrl
-                // category: category
+                headerImage: fileUrl,
+                categoryId: category
             }
         }).then((res) => {
             alert("글 수정 성공!");

@@ -5,15 +5,17 @@ const Footer = () => {
     return(
         <>
         <Box sx={{
-            borderColor: 'dvider',
+            borderColor: '#808080',
             borderTop: '1px solid',
-            display: 'flex',
-            justifyContent: 'space-between',
             mt: 'auto',
-            px: { xs: 2, sm: 4, md: 8},
-            py: 4,
             width: '100%'
         }}>
+            <Box sx={{
+                display: 'flex',
+                justifyContent: 'space-between',
+                px: { xs: 2, sm: 4, md: 8},
+                py: 4
+            }}>
             <div>
                 <Typography color="text.secondary" variant="body2" mt={1}>
                     {'Copyright © '}
@@ -37,6 +39,7 @@ const Footer = () => {
                     <GitHubIcon />
                 </IconButton>
             </Stack>
+            </Box>
         </Box>
         </>
     );

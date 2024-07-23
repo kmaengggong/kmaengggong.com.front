@@ -14,9 +14,8 @@ const ArticleUpdate = () => {
     const params = useParams();
     const articleId = params.articleId;
 
-    const [memberId, setMemberId] = useState('');
-    const [isAuthor, setIsAuthor] = useState(false);
-    const [article, setArticle] = useState(null);
+    const [memberId, setMemberId] = useState(null);
+    const [article, setArticle] = useState(false);
     const [title, setTitle] = useState('');
     const [category, setCategory] = useState(2);
     const [fileUrl, setFileUrl] = useState(null);
@@ -28,19 +27,19 @@ const ArticleUpdate = () => {
     }, []);
 
     useEffect(() => {
-        if(article === null) return;
-        if(memberId === article.authorId){
-            setIsAuthor(true);
+        console.log(memberId);
+        if(article !== null && memberId !== null){
+            if(memberId !== article.authorId){
+                alert("접근 권한이 없습니다!")
+                navigate(-1);
+            }
+            else{
+                setFileUrl(article.headerImage);
+                setTitle(article.title);
+                setHtmlStr(article.content);
+            }
         }
-    }, [article, isLogin]);
-
-    useEffect(() => {
-        if(!isAuthor) return;
-        setFileUrl(article.headerImage);
-        setTitle(article.title);
-        setHtmlStr(article.content);
-        // setCategory(article.category.categoryId);
-    }, [isAuthor]);
+    }, [article]);
 
     const fetchData = async () => {
         await axios({
