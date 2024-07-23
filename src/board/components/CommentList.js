@@ -157,7 +157,8 @@ const CommentList = ({
                         {comment.nickname}
                     </Typography>
                 </Stack>
-                {!isEditMode ?
+                {!comment.deleted ?
+                    !isEditMode ?
                         <>
                         {isReply && <SubdirectoryArrowRightIcon sx={{mr: 1}} />}
                         <ListItemText>
@@ -174,6 +175,10 @@ const CommentList = ({
                             }}
                             sx={{mr: 2}}
                         />
+                    :
+                    <ListItemText sx={{color: 'text.secondary'}}>
+                        삭제된 댓글입니다
+                    </ListItemText>
                 }
                 {authorId !== comment.authorId ? <></> :
                     !isEditMode ?
