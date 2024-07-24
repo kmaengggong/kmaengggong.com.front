@@ -30,9 +30,21 @@ const CommentList = ({
     };
 
     // 좋아요
-    const onClickCommentLikeButton = (event) => {
+    const onClickCommentLikeButton = async (event) => {
         event.preventDefault();
         event.stopPropagation();
+
+        await axios({
+            method: 'POST',
+            url: `/comment/${commentId}/like`,
+            header: {
+                Authorization: `Bearer ${localStorage.getItem("access_token")}`
+            }
+        }).then((res) => {
+            console.log(res);
+        }).catch((err) => {
+            console.error(err);
+        });
     }
 
     // 수정

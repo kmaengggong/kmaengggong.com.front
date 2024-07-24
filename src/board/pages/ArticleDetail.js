@@ -98,6 +98,22 @@ const ArticleDetail = () => {
         });
     };
 
+    const onClickLikeButton = async (event) => {
+        event.preventDefault();
+        await axios({
+            method: 'POST',
+            url: `/board/${articleId}/like`,
+            header: {
+                Authorization: `Bearer ${localStorage.getItem("access_token")}`
+            }
+        }).then((res) => {
+            console.log(res);
+        }).catch((err) => {
+            console.error(err);
+        });
+        
+    };
+
     return (
         <>
         {article === null ? <Loading /> :
@@ -171,6 +187,14 @@ const ArticleDetail = () => {
             <Box sx={{ mt: 4, mb: 16, textAlign: 'left' }}>
                 <div id="quill-content" dangerouslySetInnerHTML={{ __html: article.content}} />
             </Box>
+
+            <Button
+                variant="outlined"
+                onClick={onClickLikeButton}
+                sx={{mb: 4}}
+            >
+                붐업
+            </Button>
 
             {!isAuthor ? <></> : 
                 <ArticleButton
